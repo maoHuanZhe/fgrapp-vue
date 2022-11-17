@@ -7,12 +7,14 @@ import Vue from 'vue'
 // 定义Vue实例 调用全局显示和关闭loading方法
 const vm = new Vue()
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+axios.defaults.retry = 4;
+axios.defaults.retryDelay = 1000;
 // 创建axios实例
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
   baseURL: process.env.VUE_APP_BASE_API,
   // 超时
-  timeout: 10000
+  timeout: 3000
 })
 // request拦截器
 service.interceptors.request.use(config => {
@@ -60,7 +62,6 @@ service.interceptors.request.use(config => {
     console.log(error)
     Promise.reject(error)
 })
-
 // 响应拦截器
 service.interceptors.response.use(res => {
     // 在这里调用 关闭loading方法
@@ -69,17 +70,7 @@ service.interceptors.response.use(res => {
     const code = res.data.code || 200;
     // 获取错误信息
     const msg = errorCode[code] || res.data.message || errorCode['default']
-    if (code === 401) {
-      MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-        store.dispatch('LogOut').then(() => {
-          location.href = '/index';
-        })
-      }).catch(() => {});
-    } else if (code === 500) {
+   if (code === 500) {
       Message({
         message: msg,
         type: 'error'
@@ -110,13 +101,45 @@ service.interceptors.response.use(res => {
   error => {
     // 在这里调用 关闭loading方法
     vm.$hideLoading()
+    if (error.response && error.response.status === 401) {
+      store.dispatch('FedLogOut')
+      return;
+    }
     console.log('err' + error)
     let { message } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";
     }
     else if (message.includes("timeout")) {
-      message = "系统接口请求超时";
+      console.dir(error)
+      const config = error.config;
+      // Set the variable for keeping track of the retry count
+      config.__retryCount = config.__retryCount || 0;
+      // If config does not exist or the retry option is not set, reject
+      if(!config || !config.retry
+        // Check if we've maxed out the total number of retries
+        || config.__retryCount >= config.retry) {
+        Message({
+          message: "系统接口请求超时",
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return Promise.reject(error);
+      }
+
+      // Increase the retry count
+      config.__retryCount += 1;
+
+      // Create new promise to handle exponential backoff
+      const backoff = new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve();
+        }, config.retryDelay || 1);
+      });
+      // Return the promise in which recalls axios to retry the request
+      return backoff.then(function() {
+        return service(config);
+      });
     }
     else if (message.includes("Request failed with status code")) {
       message = "系统接口" + message.substr(message.length - 3) + "异常";
