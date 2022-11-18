@@ -18,8 +18,8 @@ jobs:
       - uses: actions/setup-node@v2 #nodejs 环境
         with:
           node-version: '14' #nodejs 版本
-      - run: yarn install #安装依赖
-      - run: yarn build:prod #打包
+      - run: npm install #安装依赖
+      - run: npm run build:prod #打包
 
       - name: Tar dist file
         run: |
