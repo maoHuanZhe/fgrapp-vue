@@ -1,0 +1,45 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2 #nodejs 环境
+        with:
+          node-version: '14' #nodejs 版本
+      - run: npm install #安装依赖
+      - run: npm run build:prod #打包
+
+      - name: Tar dist file
+        run: |
+          tar -zcvf dist.tar.gz dist # 打包dist文件夹
+      - name: Scp_upload_tar_file # 上传至服务器
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: 'dist.tar.gz'
+          remote: '/app/fgrapp/webapp.tar.gz'
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+      - name: Deploy_app_tar #解压压缩包
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /app/fgrapp
+            rm -rf dist
+            tar -zxvf dist.tar.gz
