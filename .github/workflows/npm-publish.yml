@@ -23,6 +23,7 @@ jobs:
           script: |
             cd /app/fgrapp-vue
             git pull
+            rm -rf node_modules
             npm install #安装依赖
             npm run build:prod #打包
             date=` date +%Y%m%d-%H:%M:%S `
