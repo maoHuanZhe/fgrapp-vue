@@ -1,0 +1,31 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy_app #解压压缩包
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /app/fgrapp-vue
+            git pull
+            npm install #安装依赖
+            npm run build:prod #打包
+            date=` date +%Y%m%d-%H:%M:%S `
+            tar czvf /app/deploy/bck/dist.tar.bck.$date /app/deploy/dist
+            rm -rf /app/deploy/dist
+            cp -R dist/ /app/deploy/
