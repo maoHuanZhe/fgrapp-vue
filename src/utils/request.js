@@ -111,7 +111,6 @@ service.interceptors.response.use(res => {
       message = "后端接口连接异常";
     }
     else if (message.includes("timeout")) {
-      console.dir(error)
       const config = error.config;
       // Set the variable for keeping track of the retry count
       config.__retryCount = config.__retryCount || 0;
