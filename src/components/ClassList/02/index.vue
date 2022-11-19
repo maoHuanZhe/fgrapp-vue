@@ -1,17 +1,20 @@
 <template>
   <fieldset class="checkbox-group">
     <legend class="checkbox-group-legend">分类</legend>
-    <div v-for="item in list"
-    :key="item.id"
-    @click="clickHandle(item.id)" class="checkbox" >
-      <label class="checkbox-wrapper" >
-        <input type="radio" class="checkbox-input" name="type" :checked="item.id == id"/>
+    <div
+      v-for="item in list"
+      :key="item.id"
+      class="checkbox"
+      @click="clickHandle(item.id)"
+    >
+      <label class="checkbox-wrapper">
+        <input type="radio" class="checkbox-input" name="type" :checked="item.id == id">
         <span class="checkbox-tile">
-        <span class="checkbox-icon">
-          <svg-icon :icon-class='item.name.toLowerCase()'/>
+          <span class="checkbox-icon">
+            <svg-icon :icon-class="item.name.toLowerCase()" />
+          </span>
+          <span class="checkbox-label">{{ item.name }}</span>
         </span>
-        <span class="checkbox-label">{{ item.name }}</span>
-      </span>
       </label>
     </div>
   </fieldset>
@@ -19,7 +22,7 @@
 
 <script>
 export default {
-  name: "index",
+  name: 'Index',
   props: {
     list: {
       type: Array,
@@ -35,22 +38,22 @@ export default {
       id: ''
     }
   },
-  created() {
-    this.id = this.classId;
-  },
   watch: {
     $route: {
-      handler: function(val, oldVal){
-        this.id  = val.params.classId;
+      handler: function(val, oldVal) {
+        this.id = val.params.classId
       }
     }
   },
+  created() {
+    this.id = this.classId
+  },
   methods: {
     clickHandle(id) {
-      if (this.$route.params.classId !== id){
+      if (this.$route.params.classId !== id) {
         this.$router.push({
-          path: "/page/class/" + id
-        }).catch(err => err);
+          path: '/page/class/' + id
+        }).catch(err => err)
       }
     }
   }
@@ -91,8 +94,6 @@ export default {
     margin: .5rem 0.5rem;
   }
 }
-
-
 
 .checkbox-group-legend {
   font-size: 1.5rem;

@@ -42,6 +42,10 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/topic/list'], resolve)
       },
       {
+        path: 'search/:problem',
+        component: (resolve) => require(['@/views/topic/list'], resolve)
+      },
+      {
         path: 'time',
         component: (resolve) => require(['@/views/topic/timeline/index'], resolve)
       },

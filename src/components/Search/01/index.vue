@@ -1,25 +1,29 @@
 <template>
   <div class="search-container">
-    <input id="search-box" type="text" class="search-box" v-model="title" @keyup.enter.prevent="submit" />
-    <label for="search-box">
-      <svg-icon class="search-icon" icon-class="search" @click="submit"></svg-icon>
+    <input id="search-box-title" v-model="title" type="text" class="search-box" @keyup.enter.prevent="submit">
+    <label for="search-box-title">
+      <svg-icon class="search-icon" icon-class="search" @click="submit" />
     </label>
   </div>
 </template>
 
 <script>
-import eventBus from "@/utils/eventBus";
 export default {
-  name: "index",
+  name: 'Index',
   data() {
     return {
       title: ''
     }
   },
   methods: {
-    submit(){
-      eventBus.$emit('search', this.title)
-      this.title = ""
+    submit() {
+      if (this.$route.params.problem !== this.title) {
+        this.$router.push({
+          path: '/page/search/' + this.title
+        }).catch(err => err).finally(() => {
+          this.title = ''
+        })
+      }
     }
   }
 }
@@ -27,7 +31,6 @@ export default {
 
 <style lang="scss" scoped>
 $tl: 0.6s; // transition length
-
 
 body {
   margin: 5%;

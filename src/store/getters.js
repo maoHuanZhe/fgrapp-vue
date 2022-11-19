@@ -3,9 +3,6 @@ const getters = {
   token: state => state.user.token,
   //分类列表
   classMap: state => state.user.classMap,
-  sidebar: state => state.app.sidebar,
-  size: state => state.app.size,
-  device: state => state.app.device,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews,
   avatar: state => state.user.avatar,

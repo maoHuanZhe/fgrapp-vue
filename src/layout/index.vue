@@ -1,130 +1,125 @@
 <template>
-  <el-container ref="container"  class="container" >
+  <el-container ref="container" class="container">
     <el-header height="65px" style="padding: 0;">
-      <Header @loginOrReg="loginOrReg"></Header>
+      <Header @loginOrReg="loginOrReg" />
     </el-header>
-      <el-main class="main" style="padding: 0">
-        <el-container class="container">
-          <el-aside width="400px" style="position: relative;padding:0;margin: 0;background: #eef1f6;">
-            <ClassList :list="classList" :class-id="defaultActive"></ClassList>
+    <el-main class="main" style="padding: 0">
+      <el-container class="container">
+        <el-aside width="400px" style="position: relative;padding:0;margin: 0;background: #eef1f6;">
+          <ClassList :list="classList" :class-id="defaultActive" />
 
-            <Footer></Footer>
-          </el-aside>
-          <el-main>
-            <transition name="fade-transform" mode="out-in">
-              <router-view />
-            </transition>
-          </el-main>
-        </el-container>
-      </el-main>
+          <Footer />
+        </el-aside>
+        <el-main>
+          <transition name="fade-transform" mode="out-in">
+            <router-view />
+          </transition>
+        </el-main>
+      </el-container>
+    </el-main>
     <el-dialog :visible.sync="showRegister" :before-close="closeRegister" width="1100px" append-to-body>
-      <register/>
+      <register />
     </el-dialog>
   </el-container>
 </template>
 
 <script>
-  import {list} from "@/api/func/class";
-  import Register from "@/components/register";
-  import {getToken} from "@/utils/auth";
-  import store from "@/store";
-  import {mapGetters} from "vuex";
-  import Footer from "@/layout/Footer"
-  import Header from "@/layout/Header"
-  import Profile from "@/components/Profile/01"
-  import ClassList from "@/components/ClassList/02"
-  import Time from "@/components/Clock/02/index"
-    export default {
-      name: "index",
-      computed: {
-        ...mapGetters([
-          'name',
-          'roles',
-          'showRegister',
-          'avatar'
-        ]),
-      },
-      components: {
-        Register,
-        Footer,
-        Header,
-        Profile,
-        ClassList,
-        Time
-      },
-      data(){
-        return{
-          userName: '',
-          open:false,
-          loading: false,
-          mainOptions:[],
-          otherOptions:[],
-          defaultActive:'home',
-          classList: [],
-        }
-      },
-      created(){
-        // 获取分类编号
-        const classId = this.$route.params && this.$route.params.classId;
-        if (classId){
-          this.defaultActive = classId + '';
-        }
-        //获取分类列表
-        list().then(({data})=>{
-          this.classList = data;
-          let classMap = {};
-          data.forEach(item =>{
-            classMap[item.id] = item.name
-          })
-          store.dispatch('ClassMap',classMap)
-        })
-        //获取当前用户
-        if (getToken()) {
-          //已登录
-            if (!store.getters.name) {
-              //未获取用户信息  获取用户信息
-              store.dispatch('GetInfo')
-            }
-        }
-      },
-      methods:{
-        goto() {
-            window.open("https://admin.fgrapp.com")
-        },
-        async logout() {
-          this.$confirm('确定注销并退出系统吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$store.dispatch('LogOut').then(()=>{
-              this.$router.go(0)//页面重新刷新
-            })
-          })
-        },
-        loginOrReg(){
-          //登陆或注册
-          store.commit('SET_SHOWREGISTER', true)
-        },
-        closeRegister(){
-          //登陆或注册
-          store.commit('SET_SHOWREGISTER', false)
-        },
-        handleSelect(key) {
-            let path = this.$route.path;
-            if (key === 'home'){
-                if (path !=="/"){
-                    return this.$router.push("/");
-                }
-            } else {
-                if (this.$route.params.classId !== key){
-                    this.$router.push("/class/" + parseInt(key));
-                }
-            }
-
-        }
-        }
+import { list } from '@/api/func/class'
+import Register from '@/components/register'
+import { getToken } from '@/utils/auth'
+import store from '@/store'
+import { mapGetters } from 'vuex'
+import Footer from '@/layout/Footer'
+import Header from '@/layout/Header'
+import ClassList from '@/components/ClassList/02'
+export default {
+  name: 'Index',
+  components: {
+    Register,
+    Footer,
+    Header,
+    ClassList
+  },
+  data() {
+    return {
+      userName: '',
+      open: false,
+      loading: false,
+      mainOptions: [],
+      otherOptions: [],
+      defaultActive: 'home',
+      classList: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name',
+      'roles',
+      'showRegister',
+      'avatar'
+    ])
+  },
+  created() {
+    // 获取分类编号
+    const classId = this.$route.params && this.$route.params.classId
+    if (classId) {
+      this.defaultActive = classId + ''
+    }
+    // 获取分类列表
+    list().then(({ data }) => {
+      this.classList = data
+      const classMap = {}
+      data.forEach(item => {
+        classMap[item.id] = item.name
+      })
+      store.dispatch('ClassMap', classMap)
+    })
+    // 获取当前用户
+    if (getToken()) {
+      // 已登录
+      if (!store.getters.name) {
+        // 未获取用户信息  获取用户信息
+        store.dispatch('GetInfo')
+      }
+    }
+  },
+  methods: {
+    goto() {
+      window.open('https://admin.fgrapp.com')
+    },
+    async logout() {
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('LogOut').then(() => {
+          this.$router.go(0)// 页面重新刷新
+        })
+      })
+    },
+    loginOrReg() {
+      // 登陆或注册
+      store.commit('SET_SHOWREGISTER', true)
+    },
+    closeRegister() {
+      // 登陆或注册
+      store.commit('SET_SHOWREGISTER', false)
+    },
+    handleSelect(key) {
+      const path = this.$route.path
+      if (key === 'home') {
+        if (path !== '/') {
+          return this.$router.push('/')
+        }
+      } else {
+        if (this.$route.params.classId !== key) {
+          this.$router.push('/class/' + parseInt(key))
+        }
+      }
+    }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
