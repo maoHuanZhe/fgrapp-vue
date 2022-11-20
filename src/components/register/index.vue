@@ -9,11 +9,11 @@
         <form action="#">
           <div>
             <label> 手机/邮箱 </label>
-            <input type="text"  class="input-email" v-model="form.phoneOrEmail" />
+            <input v-model="form.phoneOrEmail" type="text" class="input-email">
           </div>
           <div>
             <label> 验证码 </label>
-            <input type="text" class="input-password" v-model="form.code" />
+            <input v-model="form.code" type="text" class="input-password">
             <el-link v-if="showSec" class="codeLink" :underline="false" type="danger">{{ sec }}</el-link>
             <el-button v-else class="codeBtn" type="primary" :loading="loading" @click="getCode">获取验证码</el-button>
           </div>
@@ -21,65 +21,6 @@
             <el-button style="width:100%;" type="primary" :loading="registerLoading" @click="handRegister">登录/注册</el-button>
           </div>
         </form>
-<!--        <div class="alternate-text">Or sign in with</div>-->
-<!--        <div class="alternate-boxes">-->
-<!--          <div class="alternate-box">-->
-<!--            <svg-->
-<!--              xmlns="http://www.w3.org/2000/svg"-->
-<!--              class="icon icon-tabler icon-tabler-brand-google"-->
-<!--              width="24"-->
-<!--              height="24"-->
-<!--              viewBox="0 0 24 24"-->
-<!--              stroke-width="2"-->
-<!--              stroke="currentColor"-->
-<!--              fill="none"-->
-<!--              stroke-linecap="round"-->
-<!--              stroke-linejoin="round"-->
-<!--            >-->
-<!--              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>-->
-<!--              <path d="M17.788 5.108a9 9 0 1 0 3.212 6.892h-8"></path>-->
-<!--            </svg>-->
-<!--          </div>-->
-<!--          <div class="alternate-box">-->
-<!--            <svg-->
-<!--              xmlns="http://www.w3.org/2000/svg"-->
-<!--              class="icon icon-tabler icon-tabler-brand-facebook"-->
-<!--              width="24"-->
-<!--              height="24"-->
-<!--              viewBox="0 0 24 24"-->
-<!--              stroke-width="2"-->
-<!--              stroke="currentColor"-->
-<!--              fill="none"-->
-<!--              stroke-linecap="round"-->
-<!--              stroke-linejoin="round"-->
-<!--            >-->
-<!--              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>-->
-<!--              <path-->
-<!--                d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"-->
-<!--              ></path>-->
-<!--            </svg>-->
-<!--          </div>-->
-<!--          <div class="alternate-box">-->
-<!--            <svg-->
-<!--              xmlns="http://www.w3.org/2000/svg"-->
-<!--              class="icon icon-tabler icon-tabler-brand-apple"-->
-<!--              width="24"-->
-<!--              height="24"-->
-<!--              viewBox="0 0 24 24"-->
-<!--              stroke-width="2"-->
-<!--              stroke="currentColor"-->
-<!--              fill="none"-->
-<!--              stroke-linecap="round"-->
-<!--              stroke-linejoin="round"-->
-<!--            >-->
-<!--              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>-->
-<!--              <path-->
-<!--                d="M9 7c-3 0 -4 3 -4 5.5c0 3 2 7.5 4 7.5c1.088 -.046 1.679 -.5 3 -.5c1.312 0 1.5 .5 3 .5s4 -3 4 -5c-.028 -.01 -2.472 -.403 -2.5 -3c-.019 -2.17 2.416 -2.954 2.5 -3c-1.023 -1.492 -2.951 -1.963 -3.5 -2c-1.433 -.111 -2.83 1 -3.5 1c-.68 0 -1.9 -1 -3 -1z"-->
-<!--              ></path>-->
-<!--              <path d="M12 4a2 2 0 0 0 2 -2a2 2 0 0 0 -2 2"></path>-->
-<!--            </svg>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
     </div>
     <div class="login-box-quotebox">
@@ -95,70 +36,71 @@
 </template>
 
 <script>
-    import { sendCode } from "@/api/login";
-    export default {
-      name: "index",
-      data(){
-          return{
-            loading: false,
-            registerLoading: false,
-            showSec: false,
-            sec: 60,
-            form: {
-              phoneOrEmail:"",
-              code:""
-            },
-          }
-      },
-      methods:{
-        verifyForm(flag) {
-          //校验phoneOrEmail
-          //校验是否是手机号
-          var phoneExp = new RegExp("^1[34578]\\d{9}$");
-          //校验是否是邮箱
-          var emailExp = new RegExp("^([a-z0-9A-Z]+[-|_|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-          if (!phoneExp.test(this.form.phoneOrEmail) && !emailExp.test(this.form.phoneOrEmail)) {
-            this.$message.warning("请输入正确的手机号或邮箱地址")
-            return false;
-          }
-          if (flag && this.form.code.length !== 6) {
-            //校验code
-            this.$message.warning("请输入6位验证码")
-            return false;
-          }
-          return true;
-        },
-        getCode(){
-          if (this.verifyForm(false)){
-            this.loading = true;
-            sendCode(this.form.phoneOrEmail).then(()=>{
-              this.showSec = true;
-              var interval = setInterval(()=> {
-                if (this.sec) {
-                  this.sec--;
-                } else {
-                  clearInterval(interval);
-                  this.showSec = false;
-                }
-              },1000);
-            }).finally(()=>{
-              this.loading = false;
-            })
-          }
-        },
-        handRegister(){
-          if (this.verifyForm(true)) {
-            this.registerLoading = true;
-            this.$store.dispatch("Login", this.form).then(() => {
-              this.$message.success("登录成功")
-              this.$router.go(0)//页面重新刷新
-            }).finally(() => {
-              this.registerLoading = false;
-            });
-          }
-        },
+import { sendCode } from '@/api/login'
+export default {
+  name: 'Index',
+  data() {
+    return {
+      loading: false,
+      registerLoading: false,
+      showSec: false,
+      sec: 60,
+      form: {
+        phoneOrEmail: '',
+        code: ''
       }
     }
+  },
+  methods: {
+    verifyForm(flag) {
+      // 校验phoneOrEmail
+      // 校验是否是手机号
+      var phoneExp = new RegExp('^1[34578]\\d{9}$')
+      // 校验是否是邮箱
+      var emailExp = new RegExp('^([a-z0-9A-Z]+[-|_|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$')
+      if (!phoneExp.test(this.form.phoneOrEmail) && !emailExp.test(this.form.phoneOrEmail)) {
+        this.$message.warning('请输入正确的手机号或邮箱地址')
+        return false
+      }
+      if (flag && this.form.code.length !== 6) {
+        // 校验code
+        this.$message.warning('请输入6位验证码')
+        return false
+      }
+      return true
+    },
+    getCode() {
+      if (this.verifyForm(false)) {
+        this.loading = true
+        sendCode(this.form.phoneOrEmail).then(() => {
+          this.showSec = true
+          var interval = setInterval(() => {
+            if (this.sec) {
+              this.sec--
+            } else {
+              clearInterval(interval)
+              this.showSec = false
+              this.sec = 60
+            }
+          }, 1000)
+        }).finally(() => {
+          this.loading = false
+        })
+      }
+    },
+    handRegister() {
+      if (this.verifyForm(true)) {
+        this.registerLoading = true
+        this.$store.dispatch('Login', this.form).then(() => {
+          this.$message.success('登录成功')
+          this.$router.go(0)// 页面重新刷新
+        }).finally(() => {
+          this.registerLoading = false
+        })
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
