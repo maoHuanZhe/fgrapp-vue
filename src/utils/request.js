@@ -2,7 +2,6 @@ import axios from 'axios'
 import { Notification, MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import errorCode from '@/utils/errorCode'
 import Vue from 'vue'
 // 定义Vue实例 调用全局显示和关闭loading方法
 const vm = new Vue()
@@ -68,35 +67,15 @@ service.interceptors.response.use(res => {
     vm.$hideLoading()
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
-    // 获取错误信息
-    const msg = errorCode[code] || res.data.message || errorCode['default']
-   if (code === 500) {
-      Message({
-        message: msg,
-        type: 'error'
-      })
-      return Promise.reject(new Error(msg))
-    } else if (code === 402) {
-      Message({
-        message: res.data.data,
-        type: 'error'
-      })
-      return Promise.reject(new Error(msg))
-    } else if (code === 403) {
-      //参数校验出错
-      Message({
-        message: res.data.data,
-        type: 'error'
-      })
-      return Promise.reject(new Error(msg))
-    } else if (code !== 200) {
-      Notification.error({
-        title: msg
-      })
-      return Promise.reject('error')
-    } else {
+    if (code === 200) {
       return res.data
     }
+    // 全局业务跟踪号
+    const traceId = res.headers.trace_id;
+    // 获取错误信息
+    let msg = res.data.message || res.data.data;
+    message(msg,code,traceId)
+    return Promise.reject(new Error(msg))
   },
   error => {
     // 在这里调用 关闭loading方法
@@ -151,5 +130,18 @@ service.interceptors.response.use(res => {
     return Promise.reject(error)
   }
 )
+function message(msg,code,traceId) {
+  let html =  '错误信息: ' + msg + '<br/>'
+            + '错误码: ' + code + '<br/>'
+            + '流水号: ' + traceId;
+  console.log(html);
+  Message({
+    dangerouslyUseHTMLString: true,
+    message: html,
+    type: 'error',
+    duration: 0,
+    showClose: true
+  })
+}
 
 export default service
