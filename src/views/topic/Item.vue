@@ -1,7 +1,7 @@
 <template>
   <div class="blog_post">
     <div class="container_copy">
-      <span class="span_primary">{{ info.classId | className }}</span>
+      <span class="span_primary">{{ info.type | typeName }} - {{ info.classId | className }}</span>
       <h1>{{ info.problem }}</h1>
       <p>{{ info.summary }}</p>
       <h3>
@@ -10,9 +10,9 @@
         {{ info.likeNum ? info.likeNum + ' 个点赞' : '' }}
       </h3>
       <button class="learn-more" @click.prevent="toDetail">
-    <span class="circle" aria-hidden="true">
-      <span class="icon arrow"></span>
-    </span>
+        <span class="circle" aria-hidden="true">
+          <span class="icon arrow" />
+        </span>
         <span class="button-text">Learn More</span>
       </button>
     </div>
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "Item",
+  name: 'Item',
   props: {
     info: {
       type: Object,
@@ -29,8 +29,8 @@ export default {
     }
   },
   methods: {
-    toDetail(){
-      this.$router.push("/page/detail/" + this.info.id);
+    toDetail() {
+      this.$router.push('/page/detail/' + this.info.id)
     }
   }
 }
@@ -142,8 +142,6 @@ button {
   }
 }
 
-
-
 .blog_post {
   font-family: "Roboto", sans-serif !important;
   font-size: 12px;
@@ -155,12 +153,10 @@ button {
   flex: 1;
 }
 
-
 .container_copy {
   padding: 6rem 4rem 5rem 4rem;
   width: 500px;
 }
-
 
 img {
   height: 8.3rem;

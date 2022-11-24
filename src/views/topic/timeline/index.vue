@@ -1,13 +1,13 @@
 <template>
   <div class="page">
     <div class="timeline">
-      <div class="timeline__group" v-for="item in arr" :key="item.date">
+      <div v-for="item in arr" :key="item.date" class="timeline__group">
         <span class="timeline__year time" aria-hidden="true">{{ item.date }}</span>
-        <div class="timeline__cards" v-for="info in item.list" :key="info.id"  @click.prevent="toDetail(info.id)">
+        <div v-for="info in item.list" :key="info.id" class="timeline__cards" @click.prevent="toDetail(info.id)">
           <div class="timeline__card card">
             <header class="card__header">
               <time class="time">
-                {{ info.classId | className }}
+                {{ info.type | typeName }} - {{ info.classId | className }}
               </time>
             </header>
             <div class="card__content">
@@ -21,42 +21,42 @@
 </template>
 
 <script>
-import { list } from "@/api/topic";
+import { list } from '@/api/topic'
 export default {
-  name: "index",
+  name: 'Index',
   data() {
     return {
       arr: []
     }
   },
-  methods: {
-    toDetail(id){
-      this.$router.push("/page/detail/" + id);
-    }
-  },
   created() {
-    list().then(({data}) => {
-      let arr = [];
-      let index = -1;
-      let preStr = '';
+    list().then(({ data }) => {
+      const arr = []
+      let index = -1
+      let preStr = ''
       data.forEach(item => {
-        let yearAndMonth = item.lastUpdateTime.substring(0, 7);
-        if (preStr !== yearAndMonth){
-          let obj = {
+        const yearAndMonth = item.lastUpdateTime.substring(0, 7)
+        if (preStr !== yearAndMonth) {
+          const obj = {
             date: yearAndMonth,
             list: [item]
           }
           arr.push(obj)
-          index++;
+          index++
         } else {
           arr[index].list.push(item)
         }
-        preStr = yearAndMonth;
+        preStr = yearAndMonth
       })
       this.$nextTick(() => {
         this.arr = arr
       })
     })
+  },
+  methods: {
+    toDetail(id) {
+      this.$router.push('/page/detail/' + id)
+    }
   }
 }
 </script>
@@ -66,7 +66,6 @@ export default {
   margin-top: var(--rTitleMarginTop, 0) !important;
   margin-bottom: var(--rTitleMarginBottom, 0) !important;
 }
-
 
 p:not([class]){
   line-height: var(--cssTypographyLineHeight, 1.78);
@@ -181,7 +180,6 @@ CORE STYLES
   grid-row-gap: var(--timeloneCardsGap, 1.5rem);
 }
 
-
 /*
 =====
 SKIN
@@ -274,7 +272,6 @@ p:last-child{
   margin-right: auto;
 }
 
-
 .substack{
   border:1px solid #EEE;
   background-color: #fff;
@@ -283,7 +280,6 @@ p:last-child{
   height: 280px;
   margin: 1rem auto;;
 }
-
 
 .linktr{
   display: flex;
