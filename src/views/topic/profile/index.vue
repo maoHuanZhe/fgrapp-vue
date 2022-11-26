@@ -1,12 +1,11 @@
 <template>
   <div class="header__wrapper">
-    <header>
-    </header>
+    <header />
     <div class="cols__container">
       <div class="left__col">
         <div class="img__container">
           <img src="https://avatars.githubusercontent.com/u/33337057?v=4&auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Alexandra Smith">
-          <span></span>
+          <span />
         </div>
         <h2>樊光瑞</h2>
         <p>Java 开发工程师</p>
@@ -23,27 +22,19 @@
           <p>
             一个平平无奇的小天才
           </p>
-          <Icon></Icon>
+          <Icon />
         </div>
       </div>
       <div class="right__col">
-<!--        <nav>-->
-<!--          <ul>-->
-<!--            <li><a href="#">games</a></li>-->
-<!--&lt;!&ndash;            <li><a href="#">galleries</a></li>&ndash;&gt;-->
-<!--&lt;!&ndash;            <li><a href="#">groups</a></li>&ndash;&gt;-->
-<!--&lt;!&ndash;            <li><a href="#">about</a></li>&ndash;&gt;-->
-<!--          </ul>-->
-<!--        </nav>-->
+        <el-tabs type="border-card">
+          <el-tab-pane label="提交统计">
+            <Submission v-if="data.commit" :profile="data.commit" />
+          </el-tab-pane>
+          <el-tab-pane label="访问统计">
+            <Submission v-if="data.active" :content="'访问'" :profile="data.active" />
+          </el-tab-pane>
+        </el-tabs>
 
-<!--        <div class="photos">-->
-<!--          <img src="https://images.unsplash.com/photo-1495100793874-7f94aecae1fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="Photo">-->
-<!--          <img src="https://images.unsplash.com/photo-1428447207228-b396f310848b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="Photo">-->
-<!--          <img src="https://images.unsplash.com/photo-1491466424936-e304919aada7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80" alt="Photo">-->
-<!--          <img src="https://images.unsplash.com/photo-1473210630848-e12656228f26?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=965&q=80" alt="Photo">-->
-<!--          <img src="https://images.unsplash.com/photo-1428280047984-b1e0c0cfe2b7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="Photo">-->
-<!--          <img src="https://images.unsplash.com/photo-1501949997128-2fdb9f6428f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="Photo">-->
-<!--        </div>-->
       </div>
     </div>
 
@@ -51,21 +42,23 @@
 </template>
 
 <script>
-import Icon from "@/views/topic/profile/icon/index"
-import { getNum } from "@/api/topic"
+import Icon from '@/views/topic/profile/icon/index'
+import Submission from '@/components/Submission'
+import { getNum } from '@/api/topic'
 export default {
-  name: "index",
+  name: 'Index',
+  components: {
+    Icon,
+    Submission
+  },
   data() {
     return {
-      data:{}
+      data: {}
     }
   },
-  components: {
-    Icon
-  },
   created() {
-    getNum().then(({data}) => {
-      this.data = data;
+    getNum().then(({ data }) => {
+      this.data = data
     })
   }
 }
@@ -95,13 +88,11 @@ a{
   text-decoration:none;
 }
 
-
 .header__wrapper{
   header{
     width:100%;
     background:url("https://cdn.staticaly.com/gh/maoHuanZhe/image@main/profile-background.5srd3yl9big.webp?auto=compress&cs=tinysrgb&dpr=2&h=600&w=940") no-repeat 50% 20%/cover;
     min-height:calc(100px + 15vw);
-
 
   }
   .cols__container{
@@ -162,7 +153,6 @@ a{
         font-size:22px;
         margin-bottom:5px;
       }
-
 
       p{
         font-size:0.9rem;
@@ -253,7 +243,6 @@ a{
             }
 
           }
-
 
         }
         button{
