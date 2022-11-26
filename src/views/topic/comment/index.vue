@@ -3,51 +3,56 @@
     <div style="background: white;margin: 10px;border-radius: 5px;">
       <div style="width: 100%;">
         <el-input
+          ref="inputRef"
           v-model="addForm.content"
           style="padding:10px;"
-          ref="inputRef"
           type="textarea"
           :autosize="{ minRows: 4, maxRows: 8}"
           resize="none"
-          placeholder="说点什么">
-        </el-input>
-        <p style="float:left;margin-left: 10px;margin-bottom: 10px;    font-size: 1rem;
+          placeholder="说点什么"
+        />
+        <p
+          style="float:left;margin-left: 10px;margin-bottom: 10px;    font-size: 1rem;
     font-weight: 600;
     text-transform: inherit;
     line-height: 1.5;
     letter-spacing: 0.0178571em;
-    margin-right: 1rem;">
-         共 {{ list.length }} 条评论
+    margin-right: 1rem;"
+        >
+          共 {{ list.length }} 条评论
         </p>
         <el-button
-          @click="handClick"
           style="float: right;margin-right: 10px;margin-bottom: 10px;background-color: black;    font-size: 14px;
     font-weight: 600;
-    line-height: 20px;" type="info">评论</el-button>
+    line-height: 20px;"
+          type="info"
+          @click="handClick"
+        >评论</el-button>
       </div>
     </div>
-  <!-- Wrapper-->
-  <div class="comment-wrapper">
-    <!---->
-    <div class="container">
-      <div class="center-block">
-        <div v-for="comment in list" :key="comment.id" class="media-comment">
-          <a class="avatar-content" href="#">
-            <img class="avatar" :src="comment.avatar" width="70" height="70"/>
-          </a>
-          <div class="media-content">
-            <div class="media-comment-body">
-              <div class="media-option">
-                <a class="ripple-grow" href="#">
-                  <svg-icon icon-class='reply' @click="reply(comment.userId,comment.userName)"/>
-                </a>
-              </div>
-              <div class="media-comment-data-person">
-                <a class="media-comment-name" href="#">{{ comment.userName }}</a>
-                <span class="text-muted">{{ dayjs(comment.lastUpdateTime).fromNow() }}</span></div>
-              <div class="media-comment-text">
-                <el-link v-if="comment.upUserId" type="primary" :underline="false">@{{ comment.upUserName }}</el-link>
-                {{ comment.content }}
+    <!-- Wrapper-->
+    <div class="comment-wrapper">
+      <!---->
+      <div class="container">
+        <div class="center-block">
+          <div v-for="comment in list" :key="comment.id" class="media-comment">
+            <a class="avatar-content" href="#">
+              <img class="avatar" :src="comment.avatar || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'" width="70" height="70">
+            </a>
+            <div class="media-content">
+              <div class="media-comment-body">
+                <div class="media-option">
+                  <a class="ripple-grow" href="#">
+                    <svg-icon icon-class="reply" @click="reply(comment.userId,comment.userName)" />
+                  </a>
+                </div>
+                <div class="media-comment-data-person">
+                  <a class="media-comment-name" href="#">{{ comment.userName }}</a>
+                  <span class="text-muted">{{ dayjs(comment.lastUpdateTime).fromNow() }}</span></div>
+                <div class="media-comment-text">
+                  <el-link v-if="comment.upUserId" type="primary" :underline="false">@{{ comment.upUserName }}</el-link>
+                  {{ comment.content }}
+                </div>
               </div>
             </div>
           </div>
@@ -55,71 +60,70 @@
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 <script>
-  import { add } from "@/api/comment";
-  import {mapGetters} from "vuex";
-  import store from "@/store";
+import { add } from '@/api/comment'
+import { mapGetters } from 'vuex'
+import store from '@/store'
 
-  export default {
-    name: "index",
-    props: {
-      id: {
-        type: String
-      },
-      list: {
-        type: Array
-      }
+export default {
+  name: 'Index',
+  props: {
+    id: {
+      type: String
     },
-    data() {
-      return {
-        addForm: {
-          contextId: '',
-          upUserId: undefined,
-          content: '',
-        }
-      }
-    },
-    created() {
-      this.addForm.contextId = this.id
-    },
-    computed: {
-      ...mapGetters([
-        'token',
-      ]),
-    },
-    methods: {
-      handClick() {
-        if (!this.token) {
-          store.commit('SET_SHOWREGISTER', true)
-          return;
-        }
-        let content = this.addForm.content;
-        if (content) {
-          if (content.startsWith('@')) {
-            this.addForm.content = content.substring(content.indexOf(' '),content.length)
-          }
-          add(this.addForm).then(() => {
-            this.msgSuccess("评论成功");
-            this.addForm.upUserId = undefined;
-            this.addForm.content = '';
-          })
-        } else {
-          return this.$message({
-            message: '请输入评论内容',
-            type: 'warning'
-          });
-        }
-      },
-      reply(userId,userName) {
-        this.addForm.upUserId = userId;
-        this.addForm.content = "@" + userName + " "
-        this.$refs.inputRef.focus();
+    list: {
+      type: Array
+    }
+  },
+  data() {
+    return {
+      addForm: {
+        contextId: '',
+        upUserId: undefined,
+        content: ''
       }
     }
-  };
+  },
+  created() {
+    this.addForm.contextId = this.id
+  },
+  computed: {
+    ...mapGetters([
+      'token'
+    ])
+  },
+  methods: {
+    handClick() {
+      if (!this.token) {
+        store.commit('SET_SHOWREGISTER', true)
+        return
+      }
+      const content = this.addForm.content
+      if (content) {
+        if (content.startsWith('@')) {
+          this.addForm.content = content.substring(content.indexOf(' '), content.length)
+        }
+        add(this.addForm).then(() => {
+          this.msgSuccess('评论成功')
+          this.addForm.upUserId = undefined
+          this.addForm.content = ''
+        })
+      } else {
+        return this.$message({
+          message: '请输入评论内容',
+          type: 'warning'
+        })
+      }
+    },
+    reply(userId, userName) {
+      this.addForm.upUserId = userId
+      this.addForm.content = '@' + userName + ' '
+      this.$refs.inputRef.focus()
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -140,7 +144,7 @@
 // ===========================
 
 :root{
-  --body-bg:                      hsl(0, 0%, 100%);
+  --body-bg:                      rgba(250 250 250 / 50%);
   --body-color:                   hsl(210, 11%, 15%);
   --body-color-hover:             hsl(0, 0%, 0%);
   --footer-social-link-hover-bg:  hsl(0, 0%, 93%);
@@ -156,43 +160,6 @@
   --theme-color-pink:     hsl(309, 100%, 92%);
   --theme-color-cyan:     hsl(180, 83%, 91%);
   --theme-color-violet:   hsl(259, 81%, 94%);
-}
-
-// Dark mode
-
-.dark-theme{
-  --body-bg:                      #060a12;
-  --body-color:                   hsl(210, 9%, 62%);
-  --body-color-hover:             hsl(0, 0%, 100%);
-  --footer-social-link-hover-bg:  hsl(210, 8%, 25%);
-  --media-comment-body-color:     hsl(210, 11%, 15%);
-}
-
-// Selectde theme
-
-[ data-theme="default" ]{
-  --media-comment-body-bg:  var(--theme-color-red);
-}
-[ data-theme="blue" ]   {
-  --media-comment-body-bg:  var(--theme-color-blue);
-}
-[ data-theme="red" ]    {
-  --media-comment-body-bg:  var(--theme-color-red);
-}
-[ data-theme="green" ]  {
-  --media-comment-body-bg:  var(--theme-color-green);
-}
-[ data-theme="yellow" ] {
-  --media-comment-body-bg:  var(--theme-color-yellow);
-}
-[ data-theme="pink" ]   {
-  --media-comment-body-bg:  var(--theme-color-pink);
-}
-[ data-theme="cyan" ]   {
-  --media-comment-body-bg:  var(--theme-color-cyan);
-}
-[ data-theme="violet" ]   {
-  --media-comment-body-bg:  var(--theme-color-violet);
 }
 
 // Grid breakpoints
@@ -213,7 +180,6 @@ $breakpoints: (
   box-sizing: border-box;
 }
 
-
 $enable-body-flex: true;
 
 #body{
@@ -228,8 +194,9 @@ $enable-body-flex: true;
   font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   color: var(--body-color);
-  background-color: var(--body-bg );
+  background-color: rgba(250 250 250 / 50%);
   -webkit-text-size-adjust: 100%;
+  border-radius: 0.75rem;
 }
 
 a {
@@ -241,7 +208,6 @@ a {
   &:hover { color: var(--body-color-hover) }
   &:focus { outline: none }
 }
-
 
 // heading
 
@@ -257,7 +223,6 @@ h3{
 h5 {
   font-size: 1.1rem;
 }
-
 
 // Container
 
@@ -294,7 +259,6 @@ $addonz-switch-input-active-transition: transform 0s, opacity 0s;
 // disabled
 $addonz-switch-input-disabled-more-addonz-switch-inner: $addonz-switch-input-checked-more-addonz-switch-inner-after-bg;
 $addonz-switch-input-disabled-more-addonz-switch-inner-before-bg:  fade-out(#343a40, 0.60%) !important;
-
 
 .addonz-switch {
   z-index: 0;
@@ -426,7 +390,6 @@ $addonz-switch-input-disabled-more-addonz-switch-inner-before-bg:  fade-out(#343
   background-color: $addonz-switch-input-disabled-more-addonz-switch-inner-before-bg;
 }
 
-
 // =============================
 // Box theme options
 // =============================
@@ -495,7 +458,6 @@ $addonz-switch-input-disabled-more-addonz-switch-inner-before-bg:  fade-out(#343
   vertical-align: middle;
   top: -.1rem;
 }
-
 
 // =============================
 // Comment content ( components )
@@ -569,7 +531,6 @@ $addonz-switch-input-disabled-more-addonz-switch-inner-before-bg:  fade-out(#343
     margin-right: 1rem;
   }
 }
-
 
 .ripple-grow{
   width: 2.5rem;

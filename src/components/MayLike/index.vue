@@ -50,10 +50,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   padding: 0;
   margin: 0 auto;
+  background: rgba(250 250 250 / 50%);
+  border-radius: 0.75rem;
 }
 
 .title {
@@ -71,7 +73,7 @@ export default {
 }
 .card:hover {
    transition: all 0.30s ease-in-out;
-   transform: scale(1.05);
+   transform: scale(1.01);
    z-index: 20;
    box-shadow: 0 20px 30px 0 rgba(1, 1, 1, 0.2);
 }

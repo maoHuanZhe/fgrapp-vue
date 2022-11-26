@@ -5,9 +5,10 @@
       <h1>{{ info.problem }}</h1>
       <p>{{ info.summary }}</p>
       <h3>
-        {{ '最后修改于 ' + dayjs(info.lastUpdateTime).fromNow() }}
-        {{ info.uv ? info.uv + ' 次阅读' : '' }}
-        {{ info.likeNum ? info.likeNum + ' 个点赞' : '' }}
+        最后修改于 {{ dayjs(info.lastUpdateTime).fromNow() }}
+        <i class="el-icon-user-solid" /> {{ info.uv }}
+        <i class="el-icon-view" /> {{ info.pv || 0 }}
+        <i class="el-icon-star-on" /> {{ info.likeNum }}
       </h3>
       <button class="learn-more" @click.prevent="toDetail">
         <span class="circle" aria-hidden="true">

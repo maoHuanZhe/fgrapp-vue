@@ -3,21 +3,19 @@
     <el-header height="65px" style="padding: 0;z-index: 1996;">
       <Header @loginOrReg="loginOrReg" />
     </el-header>
-    <el-main class="main" style="padding: 0">
-      <el-container class="container">
-        <el-aside width="400px" style="position: relative;padding:0;margin: 0;background: #eef1f6;">
-          <ClassList :list="classList" :class-id="defaultActive" />
-          <ReadTop />
-          <RandomList />
-          <Footer />
-        </el-aside>
-        <el-main>
-          <transition name="fade-transform" mode="out-in">
-            <router-view />
-          </transition>
-        </el-main>
-      </el-container>
-    </el-main>
+    <el-container>
+      <el-aside width="400px" style="position: relative;padding:0;margin: 0;overflow: hidden;">
+        <ClassList :list="classList" :class-id="defaultActive" />
+        <ReadTop />
+        <RandomList />
+        <Footer />
+      </el-aside>
+      <el-main class="main">
+        <transition name="fade-transform" mode="out-in">
+          <router-view />
+        </transition>
+      </el-main>
+    </el-container>
     <el-dialog :visible.sync="showRegister" :before-close="closeRegister" width="1100px" append-to-body>
       <register />
     </el-dialog>
@@ -129,6 +127,10 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 
+.main {
+  padding: 0;
+}
+
   .avatar-container {
     margin-right: 30px;
 
@@ -169,15 +171,22 @@ export default {
     *zoom: 1;
   }
   .container {
-    color: #3C3C3C;
-    -webkit-font-smoothing: antialiased;
-    background: #fff url("~@/assets/images/backgroud.png") repeat-y 0 36px;
-    background-size: cover;
-    //height: 100%;
-  }
-  .main{
-    width: 100%;
-    margin: 0 auto;
+    background: {
+      image:
+        radial-gradient(rgba(red, 0.3), rgba(red, 0) 40vw),
+        radial-gradient(rgba(green, 0.3), rgba(green, 0) 40vw),
+        radial-gradient(rgba(blue, 0.3), rgba(blue, 0) 40vw),
+        radial-gradient(rgba(yellow, 0.3), rgba(yellow, 0) 40vw),
+        radial-gradient(rgba(red, 0.3), rgba(red, 0) 40vw);
+      position:
+        -40vw 14rem,
+        50% 10rem,
+        60vw 14rem,
+        -10vw calc(14rem + 20vw),
+        30vw calc(14rem + 20vw);
+      size: 80vw 80vw;
+      repeat: no-repeat;
+    }
   }
   .el-footer{
     height: 70px;

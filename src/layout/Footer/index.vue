@@ -50,11 +50,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.site-footer {
-  background-color: #ffffff;
-  padding: 0 1rem 1rem;
+<style scoped lang="scss">
+.content {
+  text-align: center;
+  background-color: white;
   border-radius: 0.75rem;
+  padding: 0 1rem 1rem;
 }
 .site-footer a
 {
@@ -66,13 +67,6 @@ export default {
   width: 100%;
   height:2vh;
   margin-bottom:-7px; /*Fix for safari gap*/
-}
-
-.content {
-  position:relative;
-  height:260px;
-  text-align:center;
-  background-color: white;
 }
 
 /* Animation */

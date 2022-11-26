@@ -38,7 +38,7 @@ export default {
 //Color Varibles
 $accent-color: #3b44fb;
 $body-bg: #f0f0ff;
-$container-bg: #fafafa;
+$container-bg: rgba(250 250 250 / 50%);
 $task-bg: #fff;
 
 //Basic Varibles

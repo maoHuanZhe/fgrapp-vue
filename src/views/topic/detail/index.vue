@@ -10,13 +10,18 @@
           <!--   创作时间   -->
           <el-link type="info" :underline="false" style="margin-right: 10px;">
             最后修改于 {{ dayjs(form.lastUpdateTime).fromNow() }}</el-link>
-          <!--   阅读数   -->
+          <!--   uv   -->
           <el-link type="info" :underline="false" style="margin-right: 10px;">
-            uv: {{ operateNum.uv }} pv: {{ operateNum.pv }}</el-link>
+            <i class="el-icon-user-solid" /> {{ operateNum.uv }}
+          </el-link>
+          <!--   pv   -->
+          <el-link type="info" :underline="false" style="margin-right: 10px;">
+            <i class="el-icon-view" /> {{ operateNum.pv }}
+          </el-link>
         </div>
         <div style="color: #999aaa;padding-top: 5px;">
           <!--   分类专栏   -->
-          <span style="margin-right: 5px;">分类专栏:</span>
+          <span style="margin-right: 5px;">分类:</span>
           <el-tag size="mini" style="margin-right: 10px;">{{ form.classId | className }}</el-tag>
         </div>
       </div>
@@ -28,7 +33,7 @@
         :subfield="false"
       />
     </div>
-    <div style="height: 100px;padding-top: inherit;display: flex;">
+    <div class="operatorTab">
       <Like :liked="!operateNum.canLike" :num="operateNum.likeNum" @likeClick="likeClick" />
       <div>
         <el-avatar v-for="user in operateNum.likedUsers" :key="user.id" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
@@ -120,7 +125,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .operatorTab {
+    margin-bottom: 10px;
+    padding: 1rem;
+    display: flex;
+    background-color: rgba(250 250 250 / 50%);
+    border-radius: 0.75rem;
+  }
   .title {
     font-size: 28px;
     word-wrap: break-word;
@@ -132,7 +144,6 @@ export default {
   }
   .mavonEditor {
     width: 100%;
-    background: #fff;
     border-radius: 10px;
     padding: 16px;
   }
