@@ -1,9 +1,13 @@
 <template>
-  <div style="position: absolute;bottom: 0;width: 100%;">
+  <div>
     <!--Waves Container-->
     <div>
-      <svg class="waves"
-           viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <svg
+        class="waves"
+        viewBox="0 24 150 28"
+        preserveAspectRatio="none"
+        shape-rendering="auto"
+      >
         <defs>
           <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
         </defs>
@@ -19,28 +23,26 @@
     <!--Content starts-->
     <div class="content flex">
       <div class="site-footer">
-        <div style="width: 100%;padding-left: 60px;">
-          <Time></Time>
+        <div style="width: 100%;padding-left: 40px;">
+          <Time />
         </div>
-        <Clock></Clock>
-        <p class="copyright-text">
-          <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备2020015593号</a>.
-        </p>
-        <p class="copyright-text">
-          Copyright &copy; 2022 All Rights Reserved by
-          <a href="#">FGRAPP</a>.
-        </p>
+        <Clock />
+        <a href="http://beian.miit.gov.cn/" target="_blank" title="本站已在公安联网备案，备案号皖ICP备 2020015593号">
+          <svg-icon icon-class="beian" style="width: 142px;height: 20px;" />
+        </a>
+        <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可">
+          <svg-icon icon-class="cc" style="width: 167px;height: 20px;" />
+        </a>
       </div>
-    </div>
     <!--Content ends-->
-  </div>
-</template>
+    </div>
+  </div></template>
 
 <script>
-import Clock from "@/components/Clock/01"
-import Time from "@/components/Clock/02"
+import Clock from '@/components/Clock/01'
+import Time from '@/components/Clock/02'
 export default {
-  name: "index",
+  name: 'Index',
   components: {
     Clock,
     Time
@@ -49,38 +51,15 @@ export default {
 </script>
 
 <style scoped>
+.site-footer {
+  background-color: #ffffff;
+  padding: 0 1rem 1rem;
+  border-radius: 0.75rem;
+}
 .site-footer a
 {
-  color:#737373;
+  margin-right: 10px;
 }
-.site-footer a:hover
-{
-  color:#3366cc;
-  text-decoration:none;
-}
-.copyright-text
-{
-  margin:0
-}
-@media (max-width:991px)
-{
-  .site-footer [class^=col-]
-  {
-    margin-bottom:30px
-  }
-}
-@media (max-width:767px)
-{
-  .site-footer
-  {
-    padding-bottom:0
-  }
-  .site-footer .copyright-text,.site-footer .social-icons
-  {
-    text-align:center
-  }
-}
-
 
 .waves {
   position:relative;
@@ -91,7 +70,7 @@ export default {
 
 .content {
   position:relative;
-  height:295px;
+  height:260px;
   text-align:center;
   background-color: white;
 }
@@ -123,19 +102,6 @@ export default {
   }
   100% {
     transform: translate3d(85px,0,0);
-  }
-}
-/*Shrinking for mobile*/
-@media (max-width: 768px) {
-  .waves {
-    height:40px;
-    min-height:40px;
-  }
-  .content {
-    height:30vh;
-  }
-  h1 {
-    font-size:24px;
   }
 }
 </style>

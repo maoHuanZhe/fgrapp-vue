@@ -8,6 +8,21 @@ export function page(query) {
     params: query
   })
 }
+// 查询列表
+export function readTop() {
+  return request({
+    url: '/page/readTop',
+    method: 'get'
+  })
+}
+// 查询列表
+export function randomList(query) {
+  return request({
+    url: '/page/randomList',
+    method: 'get',
+    params: query
+  })
+}
 export function list() {
   return request({
     url: '/page/list',

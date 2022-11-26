@@ -44,7 +44,6 @@ Vue.filter('className', function (value) {
   return store.getters.classMap[value]
 })
 Vue.filter('typeName', function (value) {
-  console.log(value);
   return value === 0 ? "问题" : "博客"
 })
 

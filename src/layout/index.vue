@@ -1,13 +1,14 @@
 <template>
   <el-container ref="container" class="container">
-    <el-header height="65px" style="padding: 0;">
+    <el-header height="65px" style="padding: 0;z-index: 1996;">
       <Header @loginOrReg="loginOrReg" />
     </el-header>
     <el-main class="main" style="padding: 0">
       <el-container class="container">
         <el-aside width="400px" style="position: relative;padding:0;margin: 0;background: #eef1f6;">
           <ClassList :list="classList" :class-id="defaultActive" />
-
+          <ReadTop />
+          <RandomList />
           <Footer />
         </el-aside>
         <el-main>
@@ -32,13 +33,17 @@ import { mapGetters } from 'vuex'
 import Footer from '@/layout/Footer'
 import Header from '@/layout/Header'
 import ClassList from '@/components/ClassList/02'
+import RandomList from '@/components/RandomList'
+import ReadTop from '@/components/ReadTop'
 export default {
   name: 'Index',
   components: {
     Register,
     Footer,
     Header,
-    ClassList
+    ClassList,
+    RandomList,
+    ReadTop
   },
   data() {
     return {
@@ -168,7 +173,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     background: #fff url("~@/assets/images/backgroud.png") repeat-y 0 36px;
     background-size: cover;
-    height: 100%;
+    //height: 100%;
   }
   .main{
     width: 100%;

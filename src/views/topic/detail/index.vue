@@ -1,17 +1,18 @@
 <template>
   <div class="mavonEditor">
     <div>
-      <h1 class="title">{{form.problem}}</h1>
-      <div style="background: #f8f8f8;border-radius: 10px;padding: 5px 20px;
-  margin-top: 10px;">
+      <h1 class="title">{{ form.problem }}</h1>
+      <div
+        style="background: #f8f8f8;border-radius: 10px;padding: 5px 20px;
+  margin-top: 10px;"
+      >
         <div style="color: #999aaa;">
           <!--   创作时间   -->
           <el-link type="info" :underline="false" style="margin-right: 10px;">
             最后修改于 {{ dayjs(form.lastUpdateTime).fromNow() }}</el-link>
           <!--   阅读数   -->
           <el-link type="info" :underline="false" style="margin-right: 10px;">
-            <i class="el-icon-view"></i>
-            {{operateNum.uv}}</el-link>
+            uv: {{ operateNum.uv }} pv: {{ operateNum.pv }}</el-link>
         </div>
         <div style="color: #999aaa;padding-top: 5px;">
           <!--   分类专栏   -->
@@ -19,89 +20,104 @@
           <el-tag size="mini" style="margin-right: 10px;">{{ form.classId | className }}</el-tag>
         </div>
       </div>
-      <mavon-editor  style="margin: 10px 0;"
-                     v-model="form.answer"
-                     defaultOpen = "preview"
-                     :toolbarsFlag = "false"
-                     :subfield = "false"
+      <mavon-editor
+        v-model="form.answer"
+        style="margin: 10px 0;"
+        default-open="preview"
+        :toolbars-flag="false"
+        :subfield="false"
       />
     </div>
     <div style="height: 100px;padding-top: inherit;display: flex;">
-      <Like :liked="!operateNum.canLike" :num="operateNum.likeNum" @likeClick="likeClick"></Like>
+      <Like :liked="!operateNum.canLike" :num="operateNum.likeNum" @likeClick="likeClick" />
       <div>
-        <el-avatar v-for="user in operateNum.likedUsers" :key="user.id" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+        <el-avatar v-for="user in operateNum.likedUsers" :key="user.id" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
       </div>
       <!--   编辑   -->
-      <el-link v-if="isAdmin" @click="toEdit" type="primary" :underline="false" style="margin-right: 10px;">
+      <el-link v-if="isAdmin" type="primary" :underline="false" style="margin-right: 10px;" @click="toEdit">
         编辑</el-link>
     </div>
-    <Comment :id="topicId" :list="operateNum.comments"></Comment>
+    <Comment :id="topicId" :list="operateNum.comments" />
+    <may-like :id="topicId" :type="form.type" :class-id="form.classId" />
   </div>
 </template>
 
 <script>
-  import { updateLickNum,getDetailInfo } from "@/api/topic";
-  import {mapGetters} from "vuex";
-  import store from "@/store";
-  import Like from "@/components/Button/Liked/02/index"
-  import Comment from "@/views/topic/comment/index"
-  export default {
-    components:{
-      Like,
-      Comment
-    },
-    computed: {
-      ...mapGetters([
-        'token',
-        'isAdmin'
-      ])
-    },
-    data() {
-      return {
-        operateNum: {
-          pv:0,
-          uv:0,
-          likeNum:0,
-          canLike:true,
-          likedUsers: [],
-          comments: [],
-        },
-        topicId:undefined,
-        form:{}
-      };
-    },
-    created(){
-      const id = this.$route.params && this.$route.params.topicId;
-      this.topicId = id;
-      getDetailInfo(id).then(({data}) => {
-        this.form = data.topic;
-        this.operateNum.pv = data.pv;
-        this.operateNum.uv = data.uv;
-        this.operateNum.likeNum = data.likeNum;
-        this.operateNum.canLike = data.canLike;
-        this.operateNum.likedUsers = data.likedUsers;
-        this.operateNum.comments = data.comments;
-      })
-    },
-    methods:{
-      toEdit(){
-        this.$router.push("/page/edit/" + this.topicId);
+import { getDetailInfo, updateLickNum } from '@/api/topic'
+import { mapGetters } from 'vuex'
+import store from '@/store'
+import Like from '@/components/Button/Liked/02/index'
+import Comment from '@/views/topic/comment/index'
+import MayLike from '@/components/MayLike'
+
+export default {
+  components: {
+    Like,
+    Comment,
+    MayLike
+  },
+  data() {
+    return {
+      operateNum: {
+        pv: 0,
+        uv: 0,
+        likeNum: 0,
+        canLike: true,
+        likedUsers: [],
+        comments: []
       },
-      likeClick(){
-        //判断用户是否登陆 登陆后才能参与点赞评论
-        if (this.token){
-          updateLickNum(this.topicId).then(()=>{
-            //点赞数改变
-            this.operateNum.likeNum += this.operateNum.canLike ? 1: -1;
-            //是否点赞状态改变
-            this.operateNum.canLike = !this.operateNum.canLike;
-          })
-        } else {
-          store.commit('SET_SHOWREGISTER', true)
-        }
+      topicId: undefined,
+      form: {}
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'token',
+      'isAdmin'
+    ])
+  },
+  watch: {
+    $route: {
+      handler: function(val, oldVal) {
+        this.topicId = val.params.topicId
+        this.getInfo()
       }
     }
-  };
+  },
+  created() {
+    this.topicId = this.$route.params && this.$route.params.topicId
+    this.getInfo()
+  },
+  methods: {
+    getInfo() {
+      getDetailInfo(this.topicId).then(({ data }) => {
+        this.form = data.topic
+        this.operateNum.pv = data.pv
+        this.operateNum.uv = data.uv
+        this.operateNum.likeNum = data.likeNum
+        this.operateNum.canLike = data.canLike
+        this.operateNum.likedUsers = data.likedUsers
+        this.operateNum.comments = data.comments
+      })
+    },
+    toEdit() {
+      this.$router.push('/page/edit/' + this.topicId)
+    },
+    likeClick() {
+      // 判断用户是否登陆 登陆后才能参与点赞评论
+      if (this.token) {
+        updateLickNum(this.topicId).then(() => {
+          // 点赞数改变
+          this.operateNum.likeNum += this.operateNum.canLike ? 1 : -1
+          // 是否点赞状态改变
+          this.operateNum.canLike = !this.operateNum.canLike
+        })
+      } else {
+        store.commit('SET_SHOWREGISTER', true)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
