@@ -7,7 +7,7 @@
           <div class="timeline__card card">
             <header class="card__header">
               <time class="time">
-                {{ info.type | typeName }} - {{ info.classId | className }}
+                {{ info.type | typeName }} - {{ info.classId | className }} - {{ info.lastUpdateTime }}
               </time>
             </header>
             <div class="card__content">

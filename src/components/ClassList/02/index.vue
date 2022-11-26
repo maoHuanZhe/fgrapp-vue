@@ -1,23 +1,25 @@
 <template>
-  <fieldset class="checkbox-group">
-    <legend class="checkbox-group-legend">分类</legend>
-    <div
-      v-for="item in list"
-      :key="item.id"
-      class="checkbox"
-      @click="clickHandle(item.id)"
-    >
-      <label class="checkbox-wrapper">
-        <input type="radio" class="checkbox-input" name="type" :checked="item.id == id">
-        <span class="checkbox-tile">
-          <span class="checkbox-icon">
-            <svg-icon :icon-class="item.name.toLowerCase()" />
+  <div class="checkbox-group">
+    <h1>分类</h1>
+    <div class="main">
+      <div
+        v-for="item in list"
+        :key="item.id"
+        class="checkbox"
+        @click="clickHandle(item.id)"
+      >
+        <label class="checkbox-wrapper">
+          <input type="radio" class="checkbox-input" name="type" :checked="item.id == id">
+          <span class="checkbox-tile">
+            <span class="checkbox-icon">
+              <svg-icon :icon-class="item.name.toLowerCase()" />
+            </span>
+            <span class="checkbox-label">{{ item.name }}</span>
           </span>
-          <span class="checkbox-label">{{ item.name }}</span>
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
-  </fieldset>
+  </div>
 </template>
 
 <script>
@@ -61,7 +63,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+//Color Varibles
+$accent-color: #3b44fb;
+$body-bg: #f0f0ff;
+$container-bg: #fafafa;
+$task-bg: #fff;
+
+//Basic Varibles
+$font-family: 'Poppins', sans-serif;
+$font-color: #0d0d0d;
+$border-radius: .75rem;
+$button-size: 3rem;
+$transition: all 0.30s ease-in-out;;
 
 *,
 *:after,
@@ -69,41 +82,28 @@ export default {
   box-sizing: border-box;
 }
 
-//body {
-//  font-family: "Inter", sans-serif;
-//  line-height: 1.5;
-//  min-height: 100vh;
-//  display: flex;
-//  align-items: center;
-//  justify-content: center;
-//  background-color: #f8f8f9;
-//}
-
 .checkbox-group {
-  height: 460px;
-  overflow: scroll;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: $container-bg;
+  padding: 0;
+  box-shadow: 0 20px 30px 0 rgba(1, 1, 1, 0.07);
+  margin: 1rem 0;
+  border-radius: $border-radius;
+  & h1 {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+}
+.main {
+  padding: 0 0.5rem 1rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 600px;
-  user-select: none;
-& > * {
+  & > * {
     margin: .5rem 0.5rem;
   }
 }
-
-.checkbox-group-legend {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #9c9c9c;
-  text-align: center;
-  line-height: 1.125;
-  margin-bottom: 1.25rem;
-}
-
 .checkbox-input {
 // Code to hide the input
 clip: rect(0 0 0 0);
@@ -169,7 +169,6 @@ clip: rect(0 0 0 0);
    opacity: 0;
    transform: scale(0);
    transition: 0.25s ease;
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' fill='%23FFFFFF' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'%3E%3C/rect%3E%3Cpolyline points='216 72.005 104 184 48 128.005' fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/polyline%3E%3C/svg%3E");
    background-size: 12px;
    background-repeat: no-repeat;
    background-position: 50% 50%;
