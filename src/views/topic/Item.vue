@@ -186,6 +186,7 @@ p {
   font-size: 1.1rem;
   line-height: 1.45;
   color: #333;
+  overflow-wrap: break-word;
 }
 
 .span_primary {
