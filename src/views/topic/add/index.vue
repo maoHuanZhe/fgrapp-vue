@@ -12,12 +12,15 @@
         />
       </el-form-item>
       <el-form-item label="答案" prop="answer">
-        <mavon-editor
-          ref="md"
+        <v-md-editor
           v-model="form.answer"
-          style="max-height: 500px"
-          :toolbars="markdownOption"
-          :ishljs="true"
+          height="800px"
+          mode="editable"
+          placeholder="输入答案"
+          left-toolbar="undo redo clear emoji | h bold italic strikethrough quote | ul ol table hr | link image code | save"
+          :include-level="[1,2,3,4,5,6]"
+          :toc-nav-position-right="true"
+          :default-show-toc="true"
           @save="submit"
         />
       </el-form-item>

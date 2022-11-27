@@ -25,12 +25,14 @@
           <el-tag size="mini" style="margin-right: 10px;">{{ form.classId | className }}</el-tag>
         </div>
       </div>
-      <mavon-editor
+      <v-md-editor
         v-model="form.answer"
-        style="margin: 10px 0;"
-        default-open="preview"
-        :toolbars-flag="false"
-        :subfield="false"
+        mode="preview"
+        left-toolbar="undo redo clear emoji | h bold italic strikethrough quote | ul ol table hr | link image code | save"
+        :include-level="[1,2,3,4,5,6]"
+        :toc-nav-position-right="true"
+        :default-show-toc="true"
+        @copy-code-success="handleCopyCodeSuccess"
       />
     </div>
     <div class="operatorTab">
@@ -94,6 +96,11 @@ export default {
     this.getInfo()
   },
   methods: {
+    handleCopyCodeSuccess(code) {
+      this.$copyText(code).then(() => {
+        this.$message.success('内容已复制到剪切板！')
+      })
+    },
     getInfo() {
       getDetailInfo(this.topicId).then(({ data }) => {
         this.form = data.topic

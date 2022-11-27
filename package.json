@@ -31,15 +31,17 @@
     "url": "https://github.com/maoHuanZhe/fgrapp-vue.git"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^1.7.11",
     "axios": "0.21.0",
     "core-js": "3.8.1",
     "dayjs": "^1.11.6",
     "element-ui": "2.15.5",
     "js-cookie": "2.2.1",
-    "mavon-editor": "^2.9.1",
     "moment": "^2.29.4",
     "nprogress": "0.2.0",
+    "prismjs": "^1.29.0",
     "vue": "2.6.12",
+    "vue-clipboard2": "^0.3.3",
     "vue-router": "3.4.9",
     "vuex": "3.6.0"
   },
@@ -48,6 +50,7 @@
     "@vue/cli-plugin-eslint": "4.4.6",
     "@vue/cli-service": "4.4.6",
     "babel-eslint": "10.1.0",
+    "babel-plugin-prismjs": "^2.1.0",
     "chalk": "4.1.0",
     "connect": "3.6.6",
     "eslint": "7.15.0",

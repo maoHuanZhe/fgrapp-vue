@@ -1,3 +1,6 @@
+// const components = require('prismjs/components');
+// const allLanguages = Object.keys(components.languages).filter((item) => item !== 'meta');
+
 module.exports = {
   presets: [
     // https://github.com/vuejs/vue-cli/tree/master/packages/@vue/babel-preset-app
@@ -9,5 +12,14 @@ module.exports = {
       // This plugin can significantly increase the speed of hot updates, when you have a large number of pages.
       'plugins': ['dynamic-import-node']
     }
-  }
+  },
+  plugins: [
+    [
+      'prismjs',
+      {
+        languages: ['json','javascript','java','sql','lua','yaml'],
+        // languages: allLanguages,
+      },
+    ],
+  ],
 }

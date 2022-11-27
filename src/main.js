@@ -9,11 +9,36 @@ import router from './router'
 
 import './assets/icons' // icon
 
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
-// use
-Vue.use(mavonEditor)
+import VueMarkdownEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+import Prism from 'prismjs';
+import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
+import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
+import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
+import createEmojiPlugin from '@kangc/v-md-editor/lib/plugins/emoji/index';
+import '@kangc/v-md-editor/lib/plugins/emoji/emoji.css';
 
+VueMarkdownEditor.use(createEmojiPlugin());
+VueMarkdownEditor.use(createCopyCodePlugin());
+VueMarkdownEditor.use(createLineNumbertPlugin());
+VueMarkdownEditor.use(vuepressTheme, {
+  Prism,
+  extend(md) {
+    // md为 markdown-it 实例，可以在此处进行修改配置,并使用 plugin 进行语法扩展
+    // md.set(option).use(plugin);
+  },
+  codeHighlightExtensionMap: {
+    vue: 'html',
+  },
+});
+
+Vue.use(VueMarkdownEditor);
+
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 import dayjs from "dayjs"
 import relativeTime from 'dayjs/plugin/relativeTime'
 require('dayjs/locale/zh-cn')
