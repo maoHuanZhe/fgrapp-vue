@@ -14,7 +14,7 @@
           class="date-wrapper"
           :style="`background:${getColor(dateData.number)};`"
         >
-          <el-tooltip effect="dark" :content="`${dateData.date}：${dateData.number}次` + content" placement="top">
+          <el-tooltip effect="dark" :open-delay="300" :content="`${dateData.date}：${dateData.number}次` + content" placement="top">
             <div class="date" />
           </el-tooltip>
         </div>
